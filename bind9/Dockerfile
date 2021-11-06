@@ -19,4 +19,4 @@ RUN chown -R root:bind /etc/bind && \
 
 EXPOSE 53/tcp
 
-ENTRYPOINT [ "named", "-c", "/etc/bind/named.conf", "-f" ]
+ENTRYPOINT [ "named", "-f", "-u", "bind" ]
