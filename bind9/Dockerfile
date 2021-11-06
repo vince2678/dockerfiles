@@ -14,6 +14,9 @@ RUN apt update && \
 # copy bind configuration
 ADD bind9-config.tar /
 
+RUN chown -R root:bind /etc/bind && \
+    chown -R bind:bind /var/cache/bind
+
 EXPOSE 53/tcp
 
 ENTRYPOINT [ "named", "-c", "/etc/bind/named.conf", "-f" ]
