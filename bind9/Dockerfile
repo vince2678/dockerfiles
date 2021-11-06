@@ -18,5 +18,6 @@ RUN chown -R root:bind /etc/bind && \
     chown -R bind:bind /var/cache/bind
 
 EXPOSE 53/tcp
+EXPOSE 53/udp
 
 ENTRYPOINT [ "named", "-f", "-u", "bind" ]
