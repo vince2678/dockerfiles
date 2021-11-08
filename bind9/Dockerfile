@@ -4,7 +4,10 @@ FROM debian:${DEB_RELEASE}
 LABEL AUTHOR="Vincent Z."
 
 RUN apt update && \
-    apt -y install bind9 && \
+    apt -y install \
+     bind9 \
+     dumb-init \
+    && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/cache/apt/archives/*deb
 
@@ -20,4 +23,5 @@ RUN chown -R root:bind /etc/bind && \
 EXPOSE 53/tcp
 EXPOSE 53/udp
 
-ENTRYPOINT [ "named", "-f", "-u", "bind" ]
+ENTRYPOINT [ "dumb-init" ]
+CMD [ "named", "-f", "-u", "bind" ]
