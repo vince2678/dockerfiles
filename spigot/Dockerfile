@@ -54,10 +54,13 @@ WORKDIR ${PERSIST_DIR}
 COPY server.properties ./
 RUN echo "eula=true" > ./eula.txt
 
+RUN useradd -d ${CONTAINER_WORKDIR} -M spigot && \
+     chown -R spigot:spigot ${CONTAINER_WORKDIR}
+
 VOLUME [ "${PERSIST_DIR}" ]
 
 EXPOSE 25565/tcp
 EXPOSE 25575/tcp
 
 ENTRYPOINT [ "dumb-init" ]
-CMD [ "sh", "-c", "java -jar $CONTAINER_WORKDIR/spigot.jar --nogui" ]
+CMD [ "su", "spigot", "-c", "java -jar $CONTAINER_WORKDIR/spigot.jar --nogui" ]
