@@ -60,5 +60,4 @@ EXPOSE 25565/tcp
 EXPOSE 25575/tcp
 
 ENTRYPOINT [ "dumb-init" ]
-CMD [ "java", "-jar", "${CONTAINER_WORKDIR}/spigot.jar", "--nogui" ]
-
+CMD [ "sh", "-c", "java -jar $CONTAINER_WORKDIR/spigot.jar --nogui" ]
