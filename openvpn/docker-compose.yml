@@ -28,20 +28,11 @@ services:
       - "5555"
     restart: unless-stopped
   openvpn-monitor:
-    image: ruimarinho/openvpn-monitor
-    environment:
-      - OPENVPNMONITOR_DEFAULT_SITE=Home
-      - OPENVPNMONITOR_DEFAULT_MAPS=True
-      - OPENVPNMONITOR_SITES_0_ALIAS=OpenVPN UDP
-      - OPENVPNMONITOR_SITES_0_HOST=openvpn-udp
-      - OPENVPNMONITOR_SITES_0_PORT=5555
-      - OPENVPNMONITOR_SITES_0_SHOWDISCONNECT=True
-      - OPENVPNMONITOR_SITES_1_ALIAS=OpenVPN TCP
-      - OPENVPNMONITOR_SITES_1_HOST=openvpn-tcp
-      - OPENVPNMONITOR_SITES_1_PORT=5555
-      - OPENVPNMONITOR_SITES_1_SHOWDISCONNECT=True
+    build:
+      context: .
+      dockerfile: monitor.dockerfile
     ports:
-      - "2080:80"
+      - "2080:8080"
     links:
       - openvpn-udp
       - openvpn-tcp
