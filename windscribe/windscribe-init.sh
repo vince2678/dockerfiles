@@ -66,13 +66,6 @@ function deploy_container {
         exit 1
     fi
 
-    docker run -it -v ${volume_name}:${VOLUME_MOUNT} \
-        --rm ${IMAGE_TAG} windscribe login
-    if [ "$?" -ne 0 ]; then
-        docker volume rm ${volume_name}
-        exit 1
-    fi
-
     docker run -dit -v ${volume_name}:${VOLUME_MOUNT} \
         -p $port:${BASE_PORT} --name ${container_name} ${IMAGE_TAG}
 
