@@ -10,9 +10,9 @@ BASE_PORT=1080
 function help()
 {
     echo "       $0 (-h|--help)"
-    echo "       $0 (-b|--build)"
-    echo "       $0 (-d|--deploy)"
-    echo "       $0 (start|stop) [num]"
+    echo "       $0 (-b|b|build)"
+    echo "       $0 (-d|d|deploy)"
+    echo "       $0 (start|stop|delete) [num]"
     exit 0
 }
 
@@ -76,9 +76,7 @@ function deploy_container {
         -p $port:${BASE_PORT} --name ${container_name} ${IMAGE_TAG}
 
     if [ "$?" -ne 0 ]; then
-        docker kill ${container_name}
-        docker rm -v ${container_name}
-        exit 1
+        delete_container $num
     fi
 }
 
@@ -110,31 +108,50 @@ function stop_container {
     exit $?
 }
 
+function delete_container {
+    local num="$1"
+    if [ -z "$num" ]; then
+        echo 'No suffix/number specified'
+        exit 1
+    fi
+
+    local container_name="${CONTAINER_PREFIX}${num}"
+    local volume_name="${VOLUME_PREFIX}${num}"
+
+    echo "Stopping ${container_name}..."
+    docker kill ${container_name}
+
+    echo "Removing ${container_name}..."
+    docker rm -v ${container_name} || docker volume rm ${volume_name}
+    exit $?
+}
+
 # Parse arguments
-while true; do
-    case "$1" in
-        '-b'|'build')
+case "$1" in
+    '-b'|'b'|'build')
         build_image
         exit $?
         ;;
-        '-d'|'deploy')
+    '-d'|'d'|'deploy')
         build_image
         deploy_container
         exit $?
-            ;;
-        'start')
-            start_container $2
-            ;;
-        'stop')
-            stop_container $2
-            ;;
-        '-h'|'--help')
-            help
-            exit 1
-            ;;
-        *)
-            help
-            exit 1
-            ;;
-    esac
-done
+        ;;
+    'start')
+        start_container $2
+        ;;
+    'stop')
+        stop_container $2
+        ;;
+    'delete')
+        delete_container $2
+        ;;
+    '-h'|'--help')
+        help
+        exit 1
+        ;;
+    *)
+        help
+        exit 1
+        ;;
+esac
