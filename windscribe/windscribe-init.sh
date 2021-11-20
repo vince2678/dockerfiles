@@ -65,7 +65,7 @@ function deploy_container {
 
     echo "Logging in..."
     docker run -it -v ${volume_name}:${VOLUME_MOUNT} \
-        --rm ${IMAGE_TAG} bash -c $WRAPPER_PATH
+        --rm ${IMAGE_TAG} bash -c "$WRAPPER_PATH login"
     if [ "$?" -ne 0 ]; then
         docker volume rm ${volume_name}
         exit 1
