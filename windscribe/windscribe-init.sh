@@ -71,7 +71,8 @@ function deploy_container {
         exit 1
     fi
 
-    docker run -dit -v ${volume_name}:${VOLUME_MOUNT} \
+    echo "Creating container..."
+    docker container -t -v ${volume_name}:${VOLUME_MOUNT} \
         -p $port:${BASE_PORT} --name ${container_name} ${IMAGE_TAG}
 
     if [ "$?" -ne 0 ]; then
