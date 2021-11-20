@@ -9,6 +9,7 @@ PID=$(pidof openvpn)
 case "$1" in
   login)
     if [ "$($WS_INIT status)" != "Running" ]; then
+      echo "Starting windscribe..."
       $WS_INIT start
     fi
 
@@ -22,6 +23,7 @@ case "$1" in
     ;;
   start)
     if [ "$($WS_INIT status)" != "Running" ]; then
+      echo "Starting windscribe..."
       $WS_INIT start
     fi
 

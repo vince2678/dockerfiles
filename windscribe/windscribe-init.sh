@@ -67,6 +67,7 @@ function deploy_container {
     docker run -it -v ${volume_name}:${VOLUME_MOUNT} \
         --rm ${IMAGE_TAG} bash -c "$WRAPPER_PATH login"
     if [ "$?" -ne 0 ]; then
+        echo "Login failed. Deleting volume..."
         docker volume rm ${volume_name}
         exit 1
     fi
@@ -76,6 +77,7 @@ function deploy_container {
         -p $port:${BASE_PORT} --name ${container_name} ${IMAGE_TAG}
 
     if [ "$?" -ne 0 ]; then
+        echo "Create failed. Deleting..."
         delete_container $num
     fi
 }
@@ -119,7 +121,7 @@ function delete_container {
     local volume_name="${VOLUME_PREFIX}${num}"
 
     echo "Stopping ${container_name}..."
-    docker kill ${container_name}
+    docker kill ${container_name} 2>/dev/null
 
     echo "Removing ${container_name}..."
     docker rm -v ${container_name} || docker volume rm ${volume_name}
