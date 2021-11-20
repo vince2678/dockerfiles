@@ -4,6 +4,7 @@ IMAGE_TAG="vince2678/windscribe"
 CONTAINER_PREFIX="windscribe-"
 VOLUME_PREFIX="${CONTAINER_PREFIX}data-"
 VOLUME_MOUNT="/etc/windscribe"
+WRAPPER_PATH='/root/windscribe-wrapper.sh'
 BASE_PORT=1080
 
 function help()
@@ -64,7 +65,7 @@ function deploy_container {
 
     echo "Logging in..."
     docker run -it -v ${volume_name}:${VOLUME_MOUNT} \
-        --rm ${IMAGE_TAG} windscribe login
+        --rm ${IMAGE_TAG} bash -c $WRAPPER_PATH
     if [ "$?" -ne 0 ]; then
         docker volume rm ${volume_name}
         exit 1
