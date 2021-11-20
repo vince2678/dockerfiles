@@ -36,12 +36,14 @@ function get_next_number {
 function build_image {
     # You may need to run this as root. I don't care.
     if ! [ -s "bullseye.tgz" ]; then
+        echo "Creating base system image..."
         debootstrap.sh
         if [ "$?" -ne 0 ]; then
             exit 1
         fi
     fi
 
+    echo "Building image..."
     docker build . -t ${IMAGE_TAG}
     if [ "$?" -ne 0 ]; then
         exit 1
@@ -54,11 +56,13 @@ function deploy_container {
     local volume_name="${VOLUME_PREFIX}${num}"
     local container_name="${CONTAINER_PREFIX}${num}"
 
+    echo "Creating volume..."
     docker volume create ${volume_name}
     if [ "$?" -ne 0 ]; then
         exit 1
     fi
 
+    echo "Logging in..."
     docker run -it -v ${volume_name}:${VOLUME_MOUNT} \
         --rm ${IMAGE_TAG} windscribe login
     if [ "$?" -ne 0 ]; then
@@ -85,6 +89,7 @@ function start_container {
 
     local container_name="${CONTAINER_PREFIX}${num}"
 
+    echo "Starting ${container_name}..."
     docker start ${container_name}
     exit $?
 }
@@ -98,6 +103,7 @@ function stop_container {
 
     local container_name="${CONTAINER_PREFIX}${num}"
 
+    echo "Stopping ${container_name}..."
     docker stop ${container_name}
     exit $?
 }

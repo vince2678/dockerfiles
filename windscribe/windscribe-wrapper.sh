@@ -12,6 +12,7 @@ case "$1" in
     fi
 
     if [ "$?" -ne 0 ]; then
+      echo "Failed to start windscribe service"
       exit 1
     fi
 
