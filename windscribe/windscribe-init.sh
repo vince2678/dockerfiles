@@ -114,10 +114,12 @@ while true; do
     case "$1" in
         '-b'|'build')
         build_image
+        exit $?
         ;;
         '-d'|'deploy')
         build_image
         deploy_container
+        exit $?
             ;;
         'start')
             start_container $2
