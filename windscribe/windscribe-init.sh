@@ -8,9 +8,10 @@ BASE_PORT=1080
 
 function help()
 {
+    echo "       $0 (-h|--help)"
     echo "       $0 (-b|--build)"
     echo "       $0 (-d|--deploy)"
-    echo "       $0 (--start|--stop) [num]"
+    echo "       $0 (start|stop) [num]"
     exit 0
 }
 
@@ -85,6 +86,7 @@ function deploy_container {
 function start_container {
     local num="$1"
     if [ -z "$num" ]; then
+        echo 'No suffix/number specified'
         exit 1
     fi
 
@@ -97,6 +99,7 @@ function start_container {
 function stop_container {
     local num="$1"
     if [ -z "$num" ]; then
+        echo 'No suffix/number specified'
         exit 1
     fi
 
@@ -107,34 +110,26 @@ function stop_container {
 }
 
 # Parse arguments
-while getopts -l "build,deploy,start:,stop:,help" -o ":bdh" opt; do
-    case $opt in
-        b|build)
+while true; do
+    case "$1" in
+        '-b'|'build')
         build_image
         ;;
-        d|deploy)
+        '-d'|'deploy')
         build_image
         deploy_container
             ;;
-        start)
-            start_container $OPTARG
+        'start')
+            start_container $2
             ;;
-        stop)
-            stop_container $OPTARG
+        'stop')
+            stop_container $2
             ;;
-        \?)
-            set +x
-            echo "Invalid option: -$OPTARG" >&2
+        '-h'|'--help')
             help
             exit 1
             ;;
-        h|help)
-            help
-            exit 1
-            ;;
-        :)
-            set +x
-            echo "Option -$OPTARG requires an argument." >&2
+        *)
             help
             exit 1
             ;;
