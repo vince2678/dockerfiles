@@ -124,7 +124,8 @@ function delete_container {
     docker kill ${container_name} 2>/dev/null
 
     echo "Removing ${container_name}..."
-    docker rm -v ${container_name} || docker volume rm ${volume_name}
+    docker rm -v ${container_name}
+    docker volume rm ${volume_name}
     exit $?
 }
 
