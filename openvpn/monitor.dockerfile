@@ -15,8 +15,6 @@ RUN sed -i s'/ main/ main contrib non-free/'g /etc/apt/sources.list && \
         python-humanize \
         python-bottle \
         python-semantic-version \
-        python-virtualenv \
-        virtualenv \
         gunicorn \
         geoip-database-extra \
         geoipupdate
