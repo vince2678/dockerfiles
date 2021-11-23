@@ -65,7 +65,9 @@ function deploy_container {
 
     echo "Logging in..."
     docker run -it -v ${volume_name}:${VOLUME_MOUNT} \
-        --rm ${IMAGE_TAG} bash -c "$WRAPPER_PATH login"
+        --rm --cap-add=NET_ADMIN \
+        ${IMAGE_TAG} bash -c "$WRAPPER_PATH login"
+
     if [ "$?" -ne 0 ]; then
         echo "Login failed. Deleting volume..."
         docker volume rm ${volume_name}
@@ -74,6 +76,7 @@ function deploy_container {
 
     echo "Creating container..."
     docker container create -t -v ${volume_name}:${VOLUME_MOUNT} \
+        --cap-add=NET_ADMIN \
         -p $port:${BASE_PORT} --name ${container_name} ${IMAGE_TAG}
 
     if [ "$?" -ne 0 ]; then

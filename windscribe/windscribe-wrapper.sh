@@ -4,11 +4,13 @@ PIDFILE=/run/openvpn.pid
 WS_INIT="/etc/init.d/windscribe-cli"
 WINDSCRIBE=`which windscribe`
 
-PID=$(pidof openvpn)
+PID_WS=$(pidof windscribe)
+PID_OVPN=$(pidof openvpn)
 
 case "$1" in
   login)
-    if [ "$($WS_INIT status)" != "Running" ]; then
+    if [ -z "$PID_WS" ]; then
+      rm $WS_PIDFILE
       echo "Starting windscribe..."
       $WS_INIT start
     fi
@@ -22,7 +24,8 @@ case "$1" in
     exit $?
     ;;
   start)
-    if [ "$($WS_INIT status)" != "Running" ]; then
+    if [ -z "$PID_WS" ]; then
+      rm $WS_PIDFILE
       echo "Starting windscribe..."
       $WS_INIT start
     fi
@@ -32,7 +35,7 @@ case "$1" in
       exit 1
     fi
 
-    if [ -z "$PID" ]; then
+    if [ -z "$PID_OVPN" ]; then
       $WINDSCRIBE connect
     else
 	    rm -f $PIDFILE 2>/dev/null
@@ -45,7 +48,7 @@ case "$1" in
     pidof openvpn > $PIDFILE
     ;;
   status)
-    if [ -n "$PID" ]; then
+    if [ -n "$PID_OVPN" ]; then
         echo "Running"
     else
         echo "Stopped"
