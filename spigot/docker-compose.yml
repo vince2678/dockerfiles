@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  spigot:
+    build:
+      dockerfile: spigot.dockerfile
+      context: .
+    volumes:
+      - spigot-data:/spigotmc/persist:rw
+    ports:
+      - target: "29565"
+        published: "29565"
+        protocol: tcp
+        mode: host
+      - "127.0.0.1:29575:29575"
+    restart: unless-stopped
+volumes:
+  spigot-data:
