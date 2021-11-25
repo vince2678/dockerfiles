@@ -13,17 +13,17 @@ ENV GERRIT_GID 999
 RUN apt update
 RUN apt -y install --no-install-recommends \
         dumb-init \
-	git \
-	ssh \
-	procps \
-	bash \
+        git \
+        ssh \
+        procps \
+        bash \
         openjdk-${JAVA_VERSION_MAJOR}-jre-headless
 
 RUN rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*deb
 
 RUN groupadd -g $GERRIT_GID gerrit && \
-	useradd -d ${GERRIT_SITE} -u $GERRIT_UID -g gerrit -s `which bash` gerrit && \
-	update-alternatives --install /bin/sh sh `which bash` 10
+        useradd -d ${GERRIT_SITE} -u $GERRIT_UID -g gerrit -s `which bash` gerrit && \
+        update-alternatives --install /bin/sh sh `which bash` 10
 
 WORKDIR ${GERRIT_SITE}
 

@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  mariadb:
+    image: mariadb
+    volumes:
+      - type: bind
+        source: /var/lib/msm8916-gerrit/sql
+        target: /docker-entrypoint-initdb.d
+        read_only: true
+      - type: bind
+        source: /var/lib/msm8916-gerrit/secrets
+        target: /secrets
+        read_only: true
+      - type: volume
+        source: reviewdb
+        target: /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /secrets/pw
+      MYSQL_DATABASE_FILE: /secrets/db
+    expose:
+      - "3306"
+    restart: unless-stopped
+  msm8916-gerrit:
+    build:
+      context: .
+      dockerfile: msm8916.dockerfile
+    volumes:
+      - type: bind
+        source: /var/lib/msm8916-gerrit
+        target: /gerrit
+        volume:
+          nocopy: true
+    depends_on:
+      - mariadb
+    ports:
+      - "29418:29418"
+      - "8080:8080"
+    restart: unless-stopped
+  tasker-gerrit:
+    build:
+      context: .
+      dockerfile: tasker.dockerfile
+    volumes:
+      - type: bind
+        source: /var/lib/openosrs-gerrit
+        target: /gerrit
+        volume:
+          nocopy: true
+    ports:
+      - "8083:8080"
+      - "29420:29418"
+    restart: unless-stopped
+
+volumes:
+  reviewdb:
