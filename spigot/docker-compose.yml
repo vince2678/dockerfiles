@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.9"
 services:
   spigot:
     build:
@@ -12,6 +12,14 @@ services:
         protocol: tcp
         mode: host
       - "127.0.0.1:29575:29575"
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'
+          memory: '4G'
+        reservations:
+          cpus: '1.0'
+          memory: '2G'
     restart: unless-stopped
 volumes:
   spigot-data:

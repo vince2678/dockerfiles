@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.9"
 services:
   mariadb:
     image: mariadb
@@ -17,6 +17,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /secrets/pw
       MYSQL_DATABASE_FILE: /secrets/db
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: '200M'
+        reservations:
+          cpus: '0.5'
+          memory: '50M'
     expose:
       - "3306"
     restart: unless-stopped
@@ -32,6 +40,14 @@ services:
           nocopy: true
     depends_on:
       - mariadb
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: '1.5G'
+        limits:
+          cpus: '2.0'
+          memory: '3G'
     ports:
       - "29418:29418"
       - "8080:8080"
@@ -46,6 +62,14 @@ services:
         target: /gerrit
         volume:
           nocopy: true
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: '1G'
+        limits:
+          cpus: '1.5'
+          memory: '2G'
     ports:
       - "8083:8080"
       - "29420:29418"

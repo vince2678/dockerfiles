@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.9"
 volumes:
   ovpn-data-udp:
     external: true
@@ -15,6 +15,14 @@ services:
       - "21195:1194/udp"
     expose:
       - "5555"
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: '20M'
+        limits:
+          cpus: '2.0'
+          memory: '100M'
     restart: unless-stopped
   openvpn-tcp:
     image: kylemanna/openvpn
@@ -26,6 +34,14 @@ services:
       - "21195:1194/tcp"
     expose:
       - "5555"
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: '20M'
+        limits:
+          cpus: '2.0'
+          memory: '100M'
     restart: unless-stopped
   openvpn-monitor:
     build:
@@ -36,4 +52,12 @@ services:
     links:
       - openvpn-udp
       - openvpn-tcp
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.2'
+          memory: '50M'
+        limits:
+          cpus: '0.5'
+          memory: '100M'
     restart: unless-stopped
