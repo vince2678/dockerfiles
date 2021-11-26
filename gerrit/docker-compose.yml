@@ -4,11 +4,11 @@ services:
     image: mariadb
     volumes:
       - type: bind
-        source: /var/lib/msm8916-gerrit/sql
+        source: /var/gerrit/msm8916-gerrit/sql
         target: /docker-entrypoint-initdb.d
         read_only: true
       - type: bind
-        source: /var/lib/msm8916-gerrit/secrets
+        source: /var/gerrit/msm8916-gerrit/secrets
         target: /secrets
         read_only: true
       - type: volume
@@ -34,7 +34,7 @@ services:
       dockerfile: msm8916.dockerfile
     volumes:
       - type: bind
-        source: /var/lib/msm8916-gerrit
+        source: /var/gerrit/msm8916-gerrit
         target: /gerrit
         volume:
           nocopy: true
@@ -58,7 +58,7 @@ services:
       dockerfile: tasker.dockerfile
     volumes:
       - type: bind
-        source: /var/lib/openosrs-gerrit
+        source: /var/gerrit/tasker-gerrit
         target: /gerrit
         volume:
           nocopy: true
@@ -72,8 +72,29 @@ services:
           memory: '2G'
     ports:
       - "8083:8080"
-      - "29420:29418"
+      - "29420:29420"
     restart: unless-stopped
-
+  zvikaramba-gerrit:
+    build:
+      context: .
+      dockerfile: zvikaramba.dockerfile
+    volumes:
+      - type: bind
+        source: /var/gerrit/zvikaramba-gerrit
+        target: /gerrit
+        volume:
+          nocopy: true
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.5'
+          memory: '1G'
+        limits:
+          cpus: '1.5'
+          memory: '2G'
+    ports:
+      - "8084:8080"
+      - "29421:29421"
+    restart: unless-stopped
 volumes:
   reviewdb:

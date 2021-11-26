@@ -1,13 +1,13 @@
-ARG DEB_RELEASE=buster
+ARG DEB_RELEASE=stretch
 FROM debian:${DEB_RELEASE}
 
 LABEL maintainer="Vincent Z"
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV JAVA_VERSION_MAJOR=11
+ENV JAVA_VERSION_MAJOR=8
 
 ENV GERRIT_HOME=/gerrit
-ENV GERRIT_SITE=${GERRIT_HOME}/site
+ENV GERRIT_SITE=${GERRIT_HOME}
 
 RUN apt update
 RUN apt -y install --no-install-recommends \
@@ -26,13 +26,13 @@ RUN useradd -d ${GERRIT_SITE} -r -s `which bash` gerrit && \
 COPY gerrit-init.sh /
 RUN chmod +x /gerrit-init.sh
 
-WORKDIR ${GERRIT_HOME}
+WORKDIR ${GERRIT_SITE}
 
 EXPOSE 8080/tcp
-EXPOSE 29418/tcp
+EXPOSE 29421/tcp
 
 # change into dir where volume will be mounted
-VOLUME [ "${GERRIT_HOME}" ] 
+VOLUME [ "${GERRIT_SITE}" ] 
 
 ENTRYPOINT [ "dumb-init" ]
 CMD [ "sh", "-c", "/gerrit-init.sh" ]

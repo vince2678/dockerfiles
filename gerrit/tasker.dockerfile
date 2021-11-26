@@ -6,9 +6,8 @@ LABEL maintainer="Vincent Z"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV JAVA_VERSION_MAJOR=8
 
-ENV GERRIT_SITE=/gerrit
-ENV GERRIT_UID 997
-ENV GERRIT_GID 999
+ENV GERRIT_HOME=/gerrit
+ENV GERRIT_SITE=${GERRIT_HOME}
 
 RUN apt update
 RUN apt -y install --no-install-recommends \
@@ -21,17 +20,19 @@ RUN apt -y install --no-install-recommends \
 
 RUN rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*deb
 
-RUN groupadd -g $GERRIT_GID gerrit && \
-        useradd -d ${GERRIT_SITE} -u $GERRIT_UID -g gerrit -s `which bash` gerrit && \
+RUN useradd -d ${GERRIT_SITE} -r -s `which bash` gerrit && \
         update-alternatives --install /bin/sh sh `which bash` 10
+
+COPY gerrit-init.sh /
+RUN chmod +x /gerrit-init.sh
 
 WORKDIR ${GERRIT_SITE}
 
 EXPOSE 8080/tcp
-EXPOSE 29418/tcp
+EXPOSE 29420/tcp
 
 # change into dir where volume will be mounted
 VOLUME [ "${GERRIT_SITE}" ] 
 
 ENTRYPOINT [ "dumb-init" ]
-CMD [ "su", "gerrit", "-c", "java -jar $GERRIT_SITE/bin/gerrit.war daemon --enable-httpd" ]
+CMD [ "sh", "-c", "/gerrit-init.sh" ]
