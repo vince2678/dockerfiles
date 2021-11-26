@@ -1,0 +1,37 @@
+version: "3.9"
+secrets:
+  pw:
+    file: ./secrets/pw
+services:
+  hpssa:
+    build:
+      dockerfile: hpssa.dockerfile
+      context: .
+    secrets:
+      - pw
+    privileged: true
+    volumes:
+      - source: hpssa-data
+        target: /opt/hp/
+        type: volume
+      - source: /lib/modules
+        target: /lib/modules
+        type: bind
+        read_only: true
+      - source: /var/log
+        target: /var/log
+        type: bind
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.2"
+          memory: "20M"
+        limits:
+          cpus: "0.5"
+          memory: "100M"
+    ports:
+      - "2301:2301"
+      - "2381:2381"
+    restart: unless-stopped
+volumes:
+  hpssa-data:
