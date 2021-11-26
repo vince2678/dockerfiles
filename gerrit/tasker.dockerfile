@@ -9,24 +9,22 @@ ENV JAVA_VERSION_MAJOR=8
 ENV GERRIT_HOME=/gerrit
 ENV GERRIT_SITE=${GERRIT_HOME}
 
-RUN apt update
-RUN apt -y install --no-install-recommends \
-        dumb-init \
-        git \
-        ssh \
-        procps \
-        bash \
-        openjdk-${JAVA_VERSION_MAJOR}-jre-headless
+RUN apt update && \
+        apt -y install --no-install-recommends \
+                dumb-init \
+                git \
+                ssh \
+                procps \
+                bash \
+                openjdk-${JAVA_VERSION_MAJOR}-jre-headless
 
 RUN rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*deb
 
-RUN useradd -d ${GERRIT_SITE} -r -s `which bash` gerrit && \
+RUN useradd -d ${GERRIT_HOME} -r -s `which bash` gerrit && \
         update-alternatives --install /bin/sh sh `which bash` 10
 
 COPY gerrit-init.sh /
 RUN chmod +x /gerrit-init.sh
-
-WORKDIR ${GERRIT_SITE}
 
 EXPOSE 8080/tcp
 EXPOSE 29420/tcp

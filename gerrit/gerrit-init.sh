@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export HOME=${GERRIT_HOME}
+
 echo "Setting file ownership..."
 chown -R gerrit:gerrit ${GERRIT_HOME}
 
