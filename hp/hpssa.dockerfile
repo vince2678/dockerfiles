@@ -21,6 +21,7 @@ RUN apt update && \
         procps \
         bash \
         ssa \
+        ssacli \
         hpsmh
 
 RUN update-alternatives --install /bin/sh sh `which bash` 10
