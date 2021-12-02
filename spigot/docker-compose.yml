@@ -7,11 +7,11 @@ services:
     volumes:
       - spigot-data:/spigotmc/persist:rw
     ports:
-      - target: "29565"
-        published: "29565"
+      - target: "25565"
+        published: "25565"
         protocol: tcp
         mode: host
-      - "127.0.0.1:29575:29575"
+      - "127.0.0.1:25575:25575"
     deploy:
       resources:
         limits:
