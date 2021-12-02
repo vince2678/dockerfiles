@@ -9,13 +9,11 @@ ENV JAVA_VERSION_MAJOR=17
 ENV SPIGOT_REV=latest
 ENV BUILDTOOLS_URL="https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar"
 
-RUN apt update
-RUN apt -y install \
-        dumb-init \
+RUN apt update && apt -y install --no-install-recommends \
         openjdk-${JAVA_VERSION_MAJOR}-jdk \
         openjdk-${JAVA_VERSION_MAJOR}-jre
 
-RUN apt -y install wget \
+RUN apt -y install --no-install-recommends \
         git
 
 RUN wget ${BUILDTOOLS_URL} -O BuildTools.jar && \
@@ -39,8 +37,7 @@ WORKDIR ${CONTAINER_WORKDIR}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV JAVA_VERSION_MAJOR=17
 
-RUN apt update
-RUN apt -y install --no-install-recommends \
+RUN apt update && apt -y install --no-install-recommends \
         dumb-init \
         openjdk-${JAVA_VERSION_MAJOR}-jre-headless
 
